@@ -2,3 +2,7 @@
 name = "langy"
 version = "0.1.0"
 authors = ["Riley Stewart <riley.a.stewart@vanderbilt.edu>"]
+
+[dependencies]
+log = "*"
+env_logger = "*"
