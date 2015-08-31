@@ -70,6 +70,7 @@ fn interpret(program: String) {
                     Some(n) => *stack.get_mut(pos).unwrap() = n.unwrap() as u8 as i32,
                     None => println!("none"),
                 }
+                // *stack.get_mut(pos).unwrap() = io::stdio::stdin_raw().unwrap().read_u8().ok().unwrap_or(0);
             },
             Token::BEGIN => {
                 if *stack.get(pos).unwrap() != 0 {
