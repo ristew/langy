@@ -19,7 +19,7 @@ impl CharBuffer {
 
 
 enum Token {
-    Add,
+    Add(i32),
     Sub,
     Gt,
     Lt,
@@ -37,9 +37,19 @@ pub fn interpret(program: String) {
     let mut toks: Vec<Token> = Vec::new();
     let mut charbuf = CharBuffer::new();
     let mut i = 0;
-    for c in program.chars() {
+    while i < program.len() {
+        let c = program.chars().nth(i).unwrap();
         match c {
-            '+' => toks.push(Token::Add),
+            '+' => {
+                let mut pluses = 0;
+                while program.chars().nth(i + pluses).unwrap() == '+' {
+                    pluses += 1;
+                }    
+                i += pluses;
+                i -= 1;
+                toks.push(Token::Add(pluses as i32));
+                
+            }
             '-' => toks.push(Token::Sub),
             '>' => toks.push(Token::Gt),
             '<' => toks.push(Token::Lt),
@@ -53,12 +63,14 @@ pub fn interpret(program: String) {
             },
             _ => {},
         }
+        i += 1;
     }
     let mut ticks = 0;
+    i = 0;
     while i < toks.len() {
         match toks[i] {
-            Token::Add  => {
-                *stack.get_mut(pos).unwrap() += 1;
+            Token::Add(n)  => {
+                *stack.get_mut(pos).unwrap() += n;
             },
             Token::Sub => {
                 *stack.get_mut(pos).unwrap() -= 1;
