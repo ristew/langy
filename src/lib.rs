@@ -20,9 +20,9 @@ impl CharBuffer {
 
 enum Token {
     Add(i32),
-    Sub,
-    Gt,
-    Lt,
+    Sub(i32),
+    Gt(i32),
+    Lt(i32),
     Out,
     In,
     Begin,
@@ -50,9 +50,33 @@ pub fn interpret(program: String) {
                 toks.push(Token::Add(pluses as i32));
                 
             }
-            '-' => toks.push(Token::Sub),
-            '>' => toks.push(Token::Gt),
-            '<' => toks.push(Token::Lt),
+            '-' => { 
+                let mut minuses = 0;
+                while program.chars().nth(i + minuses).unwrap() == '-' {
+                    minuses += 1;
+                }
+                i += minuses;
+                i -= 1;
+                toks.push(Token::Sub(minuses as i32));
+            },
+            '>' => {
+                let mut gts = 0;
+                while program.chars().nth(i + gts).unwrap() == '>' {
+                    gts += 1;
+                }
+                i += gts;
+                i -= 1;
+                toks.push(Token::Gt(gts as i32));
+            },
+            '<' => {
+                let mut lts = 0;
+                while program.chars().nth(i + lts).unwrap() == '<' {
+                    lts += 1;
+                }
+                i += lts;
+                i -= 1;
+                toks.push(Token::Lt(lts as i32));
+            },
             '.' => toks.push(Token::Out),
             ',' => toks.push(Token::In),
             '[' => {
@@ -72,14 +96,14 @@ pub fn interpret(program: String) {
             Token::Add(n)  => {
                 *stack.get_mut(pos).unwrap() += n;
             },
-            Token::Sub => {
-                *stack.get_mut(pos).unwrap() -= 1;
+            Token::Sub(n) => {
+                *stack.get_mut(pos).unwrap() -= n;
             },
-            Token::Gt => {
-                pos += 1;
+            Token::Gt(n) => {
+                pos += n as usize;
             },
-            Token::Lt => {
-                pos -= 1;
+            Token::Lt(n) => {
+                pos -= n as usize;
             },
             Token::Out => {
                 let c = *stack.get(pos).unwrap();
