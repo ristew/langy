@@ -17,6 +17,11 @@ impl CharBuffer {
     }
 }
 
+fn putchar(c: i32) {
+    print!("{}", c as u8 as char);
+    io::stdout().flush().unwrap();
+}
+
 
 enum Token {
     Add(i32),
@@ -107,8 +112,7 @@ pub fn interpret(program: String) {
             },
             Token::Out => {
                 let c = *stack.get(pos).unwrap();
-                print!("{}", c as u8 as char);
-                io::stdout().flush().unwrap();
+                putchar(c);
             },
             Token::In => {
                 *stack.get_mut(pos).unwrap() = charbuf.getchar() as i32;
